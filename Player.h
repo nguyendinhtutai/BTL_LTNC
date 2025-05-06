@@ -1,48 +1,22 @@
-#pragma once
-#include <SDL2/SDL.h>
-#include <vector>
-#include "Bullet.h"
-using namespace std;
+#ifndef PLAYER_H
+#define PLAYER_H
 
-enum FacingDirection {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-};
+#include "texture.h"
 
 class Player {
+    Texture texture;
+
 public:
-    Player(int x, int y, const char* texturePath);
-    ~Player();
+    bool isDead;
+    double posX, posY;
+    double radius;
+    double vertSpeed, vertAccel;
 
-    void update(int mapWidth, int mapHeight, vector<vector<int>> map);
+    Player(SDL_Renderer* renderer, double x, double y);
+
+    void make_jump();
     void render();
-    void move(int dx, int dy, const int mapWidth, const int mapHeight, vector<vector<int>> map, const Player* otherPlayer);
-    void respawn();
-
-    SDL_Rect getRect() const { return rect; }
-
-    FacingDirection getFacingDirection() const { return facingDirection; }
-
-    Uint32 getLastShotTime() const { return lastShotTime; }
-    void setLastShotTime(Uint32 time) { lastShotTime = time; }
-    Uint32 getFireRate() const { return fireRate; }
-
-    bool hasBuff;
-private:
-    FacingDirection facingDirection;
-
-    int startX;
-    int startY;
-    int x;
-    int y;
-    int speed;
-    SDL_Texture* playerTexture;
-    SDL_Rect rect;
-    SDL_Rect srcRect;
-
-    Uint32 lastShotTime;  // Time of the last shot (in milliseconds)
-    const Uint32 fireRate; // Minimum time between shots (in milliseconds)
-
+    void apply_forces();
 };
+
+#endif // PLAYER_H
